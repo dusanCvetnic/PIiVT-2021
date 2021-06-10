@@ -6,10 +6,9 @@ export async function getAllCities(req: Request, res: Response): Promise<Respons
     try {
         const conn = await connect()
         const result = await conn.query('SELECT * FROM city;')
-    
         return res.json(result[0])
     } catch (error) {
-        res.sendStatus(404)
+        res.sendStatus(500)
         console.log(error?.sqlMessage)
     }
 }
@@ -28,7 +27,6 @@ export async function getCityById(req: Request, res: Response): Promise<Response
 
 export async function createCity(req: Request, res: Response) {
     const newCity: CityModel = req.body
-    console.log(req.body?.name)
     try {
         const conn = await connect()
         await conn.query(`
@@ -37,7 +35,36 @@ export async function createCity(req: Request, res: Response) {
             SET
                 name = ?;`, [newCity.name])
         res.sendStatus(200)
-        console.log("Dodat je novi grad")
+        console.log(`Dodat je grad ${newCity.name}`)
+    } catch (error) {
+        console.log(error?.sqlMessage)
+    }
+}
+
+export async function updateCityById(req: Request, res: Response): Promise<Response> {
+    const id = req.params.id
+    const updatedCity: CityModel = req.body
+
+    try {
+        const conn = await connect()
+        await conn.query('UPDATE city SET name = ? WHERE city_id = ?;', [updatedCity.name, id])
+        return res.json({
+            message: `Grad sa id:${id} je azuriran`
+        })
+    } catch (error) {
+        console.log(error?.sqlMessage)
+    }
+}
+
+export async function deleteCityById(req: Request, res: Response) {
+    const id = req.params.id
+
+    try {
+        const conn = await connect()
+        await conn.query('DELETE FROM city WHERE city_id = ?;', [id])
+        return res.json({
+            message: `Grad sa id:${id} je obrisan`
+        })
     } catch (error) {
         console.log(error?.sqlMessage)
     }

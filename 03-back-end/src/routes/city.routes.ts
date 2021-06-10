@@ -1,15 +1,15 @@
 import { Router } from "express";
-import { createCity, getAllCities, getCityById } from "../controllers/city.controller"; 
+import { createCity, deleteCityById, getAllCities, getCityById, updateCityById } from "../controllers/city.controller"; 
 
 const router = Router()
 
 router.route('/')
       .get(getAllCities)
-      .post(createCity);
+      .post(createCity)
 
 router.route('/:id')
       .get(getCityById)
-      .delete()
-      .put();
+      .put(updateCityById)
+      .delete(deleteCityById)
 
 export default router;  

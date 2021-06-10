@@ -11,6 +11,7 @@ export class App {
         this.settings()
         this.middlewares()
         this.routes()
+        this.afterAll()
     }
 
     settings() {
@@ -21,11 +22,14 @@ export class App {
         this.app.use(cors())
         this.app.use(express.json())
         this.app.use(express.urlencoded({ extended: true }))
-        //this.app.use((req, res) => {res.sendStatus(404)})
     }
 
     routes(){
         this.app.use('/cities', cityRoutes)
+    }
+
+    afterAll(){
+        this.app.use((req, res) => {res.sendStatus(404)})
     }
 
     async listen(){
