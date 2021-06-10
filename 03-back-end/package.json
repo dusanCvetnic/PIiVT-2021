@@ -6,14 +6,15 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "npm run clean && tsc",
-    "start": "npm run build && node ./dist/app.js",
-    "start:dev": "ts-node-dev --respawn -- src/app.ts"
+    "start": "npm run build && node ./dist/main.js",
+    "start:dev": "ts-node-dev --respawn -- src/main.ts"
   },
   "author": "Dusan Cvetnic <dusan.cvetnic.17@singimail.rs>",
   "license": "ISC",
   "dependencies": {
     "ajv": "^8.5.0",
     "bluebird": "^3.7.2",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mysql2": "^2.2.5"
@@ -21,6 +22,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.10",
     "@types/express": "^4.17.12",
+    "@types/mysql2": "github:types/mysql2",
     "@types/node": "^15.6.1",
     "eslint": "^7.27.0",
     "rimraf": "^3.0.2",

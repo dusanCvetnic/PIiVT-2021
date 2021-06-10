@@ -1,38 +1,35 @@
-import * as express from "express"
-import * as cors from "cors"
-import { CommonRoutesConfig } from "./common/common.routes.config"
+import * as express from "express";
+import * as cors from "cors";
+import cityRoutes from "./routes/city.routes"
 
-const app: express.Application = express()
-const port: Number = 5000
-const routes: Array<CommonRoutesConfig> = []
 
-// Dodavanje middleware za parsiranje JSON-a
-app.use(express.json())
+export class App {
+    private app: express.Application
 
-// Dodavanje middleware za cross-origin requests
-app.use(cors())
+    constructor(private port?: number){
+        this.app = express()
+        this.settings()
+        this.middlewares()
+        this.routes()
+    }
 
-// Dodavanje ruta
-//routes.push(new CityRoutes(app))
+    settings() {
+        this.app.set('port', this.port || 5000)
+    }
 
-// Poruka za adresu servera
-const message = `Server radi na http://localhost:${port}`
+    middlewares(){
+        this.app.use(cors())
+        this.app.use(express.json())
+        this.app.use(express.urlencoded({ extended: true }))
+        //this.app.use((req, res) => {res.sendStatus(404)})
+    }
 
-//Test ruta
-app.get('/', (req: express.Request, res: express.Response) => {
-    res.status(200).send(message)
-})
+    routes(){
+        this.app.use('/cities', cityRoutes)
+    }
 
-app.use((req, res) => {
-    res.sendStatus(404)
-})
-
-// Pokretanje osluskivanja
-app.listen(port, () => {
-    //routes.forEach((route: CommonRoutesConfig) => {
-        // Poruka za konfiguracije ruta (Samo za potrebe razvoja)
-        //console.log(`Ruta se konfigurisala za ${route.getName()}`)
-    //})
-
-    console.log(message)
-})
+    async listen(){
+        await this.app.listen(this.app.get('port'))
+        console.log(`Server se pokrenuo na http://localhost${this.app.get('port')}`)
+    }
+}

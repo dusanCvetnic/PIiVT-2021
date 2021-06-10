@@ -1,4 +1,4 @@
-export class CityModel {
-    cityId: number;
+export interface CityModel {
+    cityId?: number;
     name: string;
 }
