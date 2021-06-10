@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { createCity, deleteCityById, getAllCities, getCityById, updateCityById } from "../controllers/city.controller"; 
 import { citySchema } from "../schemas/city.schema";
-import { validateRequest/* , validateNumberOfFields */ } from '../middlewares/validateRequest';
+import { validateRequest } from '../middlewares/validateRequest';
 
 const router = Router()
 
@@ -11,7 +11,7 @@ router.route('/')
 
 router.route('/:id')
       .get(getCityById)
-      .put(updateCityById)
+      .put(citySchema, validateRequest, updateCityById)
       .delete(deleteCityById)
 
 export default router;  
