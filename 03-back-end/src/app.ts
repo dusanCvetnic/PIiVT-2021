@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as cors from "cors";
 import cityRoutes from "./routes/city.routes"
+import subjectRoutes from "./routes/subject.routes"
 
 
 export class App {
@@ -26,6 +27,7 @@ export class App {
 
     routes(){
         this.app.use('/cities', cityRoutes)
+        this.app.use('/subjects', subjectRoutes)
     }
 
     afterAll(){
