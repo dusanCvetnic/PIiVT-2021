@@ -1,4 +1,4 @@
 export interface SubjectModel {
-    cityId?: number;
+    subjectId?: number;
     name: string;
 }
