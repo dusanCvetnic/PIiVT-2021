@@ -26,6 +26,9 @@ const userSchema = [
         .withMessage('Uloga mora postojati')
         .matches(/^student|professor$/)
         .withMessage('Uloga mora biti jedna od sledecih: student , professor'),
+    body('isActive')
+        .matches(/^1|0$/)
+        .withMessage('Aktivnost mora biti jedna od sledecih brojeva: 1 za aktivnog korisnika , 0 za neaktivnog korisnika')
 ]
 
 export { userSchema }
