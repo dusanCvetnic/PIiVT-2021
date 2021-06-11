@@ -20,7 +20,7 @@ export async function getSubjectById(req: Request, res: Response): Promise<Respo
         const result = await conn.query('SELECT * FROM subject WHERE subject_id = ?;', [id])
         return res.json(result[0])
     } catch (error) {
-        res.sendStatus(404)
+        res.sendStatus(500)
         console.log(error?.sqlMessage)
     }
 }
@@ -37,6 +37,7 @@ export async function createSubject(req: Request, res: Response) {
         res.sendStatus(200)
         console.log(`Dodat je predmet ${newSubject.name}`)
     } catch (error) {
+        res.sendStatus(500)
         console.log(error?.sqlMessage)
     }
 }
@@ -52,6 +53,7 @@ export async function updateSubjectById(req: Request, res: Response): Promise<Re
             message: `Predmet sa id:${id} je azuriran`
         })
     } catch (error) {
+        res.sendStatus(500)
         console.log(error?.sqlMessage)
     }
 }
@@ -66,6 +68,7 @@ export async function deleteSubjectById(req: Request, res: Response) {
             message: `Predmet sa id:${id} je obrisan`
         })
     } catch (error) {
+        res.sendStatus(500)
         console.log(error?.sqlMessage)
     }
 }

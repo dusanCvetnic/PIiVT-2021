@@ -20,7 +20,7 @@ export async function getCityById(req: Request, res: Response): Promise<Response
         const result = await conn.query('SELECT * FROM city WHERE city_id = ?;', [id])
         return res.json(result[0])
     } catch (error) {
-        res.sendStatus(404)
+        res.sendStatus(500)
         console.log(error?.sqlMessage)
     }
 }
@@ -37,6 +37,7 @@ export async function createCity(req: Request, res: Response) {
         res.sendStatus(200)
         console.log(`Dodat je grad ${newCity.name}`)
     } catch (error) {
+        res.sendStatus(500)
         console.log(error?.sqlMessage)
     }
 }
@@ -52,6 +53,7 @@ export async function updateCityById(req: Request, res: Response): Promise<Respo
             message: `Grad sa id:${id} je azuriran`
         })
     } catch (error) {
+        res.sendStatus(500)
         console.log(error?.sqlMessage)
     }
 }
@@ -66,6 +68,7 @@ export async function deleteCityById(req: Request, res: Response) {
             message: `Grad sa id:${id} je obrisan`
         })
     } catch (error) {
+        res.sendStatus(500)
         console.log(error?.sqlMessage)
     }
 }
