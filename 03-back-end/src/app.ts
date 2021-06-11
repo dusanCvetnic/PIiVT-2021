@@ -3,8 +3,6 @@ import * as cors from "cors";
 import cityRoutes from "./routes/city.routes"
 import subjectRoutes from "./routes/subject.routes"
 import userRoutes from "./routes/user.routes"
-
-
 export class App {
     private app: express.Application
 

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { connect } from "../common/database";
 import { UserModel } from '../models/user.model';
 import * as bcrypt from "bcrypt";
@@ -8,7 +8,7 @@ export async function getAllUsers(req: Request, res: Response): Promise<Response
         const conn = await connect()
         const result = await conn.query('SELECT * FROM user;')
 
-        if(!result[0][0]?.email){
+        if(result[0][0] === undefined){
             return res.status(404).send('Ne postoje korisnici')
         }
 
@@ -30,27 +30,28 @@ async function getUserByEmail(email): Promise<UserModel> {
     }
 }
 
-export async function getUserById(req: Request, res: Response, next: NextFunction): Promise<Response> {
+export async function getUserById(req: Request, res: Response): Promise<Response> {
     const id = req.params.id
+
     try {
         const conn = await connect()
         const result = await conn.query('SELECT * FROM user WHERE user_id = ?;', [id])
         
-        if(!result[0][0]?.email){
+        if(result[0][0] === undefined){
             return res.status(404).send('Trazeni korisnik ne postoji')
         }
 
         const user: UserModel = {
-            forename: result[0][0]?.forename,
-            surname: result[0][0]?.surname,
-            email: result[0][0]?.email,
-            password: result[0][0]?.password_hash,
-            role: result[0][0]?.role,
+            forename: result[0][0].forename,
+            surname: result[0][0].surname,
+            email: result[0][0].email,
+            password: result[0][0].password_hash,
+            role: result[0][0].role,
         }
         
         return res.json(user)
     } catch (error) {
-        res.sendStatus(404)
+        res.sendStatus(500)
         console.log(error?.sqlMessage)
     }
 }
@@ -75,6 +76,7 @@ export async function createUser(req: Request, res: Response) {
         console.log(`Dodat je korisnik ${newUser.forename} ${newUser.surname} sa ulogom ${newUser.role}`)
         res.sendStatus(200)
     } catch (error) {
+        res.sendStatus(500)
         console.log(error?.sqlMessage)
     }
 }
@@ -110,6 +112,7 @@ export async function updateUserById(req: Request, res: Response): Promise<Respo
             message: `Korisnik sa id:${id} je azuriran`
         })
     } catch (error) {
+        res.sendStatus(500)
         console.log(error?.sqlMessage)
     }
 }
@@ -124,6 +127,7 @@ export async function deleteUserById(req: Request, res: Response) {
             message: `Korisnik sa id:${id} je obrisan`
         })
     } catch (error) {
+        res.sendStatus(500)
         console.log(error?.sqlMessage)
     }
 }
@@ -148,6 +152,7 @@ export async function loginUser(req: Request, res: Response) {
             }
     
         } catch (error) {
+            res.sendStatus(500)
             console.log(error?.sqlMessage)
         }
     }    
