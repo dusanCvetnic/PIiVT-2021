@@ -8,7 +8,7 @@ export function validateRequest(
 ) {
     const errors = validationResult(req)
     const matched = matchedData(req, {
-        includeOptionals: true,
+        includeOptionals: true
     })
 
     if (!errors.isEmpty()) {

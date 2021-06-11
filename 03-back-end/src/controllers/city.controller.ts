@@ -8,20 +8,20 @@ export async function getAllCities(req: Request, res: Response): Promise<Respons
         const result = await conn.query('SELECT * FROM city;')
         return res.json(result[0])
     } catch (error) {
-        res.sendStatus(500)
-        console.log(error?.sqlMessage)
+        res.status(500).send({error: error?.sqlMessage})
     }
 }
 
 export async function getCityById(req: Request, res: Response): Promise<Response> {
-    const id = req.params.id
+    const id = +(req.params.id)
+    if (id <= 0) return res.status(400).send('ID ne moze biti manji od 1')
+
     try {
         const conn = await connect()
         const result = await conn.query('SELECT * FROM city WHERE city_id = ?;', [id])
         return res.json(result[0])
     } catch (error) {
-        res.sendStatus(500)
-        console.log(error?.sqlMessage)
+        res.status(500).send({error: error?.sqlMessage})
     }
 }
 
@@ -34,16 +34,19 @@ export async function createCity(req: Request, res: Response) {
                 city 
             SET
                 name = ?;`, [newCity.name])
+
         res.sendStatus(200)
+
         console.log(`Dodat je grad ${newCity.name}`)
     } catch (error) {
-        res.sendStatus(500)
-        console.log(error?.sqlMessage)
+        res.status(500).send({error: error?.sqlMessage})
     }
 }
 
 export async function updateCityById(req: Request, res: Response): Promise<Response> {
-    const id = req.params.id
+    const id = +(req.params.id)
+    if (id <= 0) return res.status(400).send('ID ne moze biti manji od 1')
+
     const updatedCity: CityModel = req.body
 
     try {
@@ -53,13 +56,13 @@ export async function updateCityById(req: Request, res: Response): Promise<Respo
             message: `Grad sa id:${id} je azuriran`
         })
     } catch (error) {
-        res.sendStatus(500)
-        console.log(error?.sqlMessage)
+        res.status(500).send({error: error?.sqlMessage})
     }
 }
 
 export async function deleteCityById(req: Request, res: Response) {
-    const id = req.params.id
+    const id = +(req.params.id)
+    if (id <= 0) return res.status(400).send('ID ne moze biti manji od 1')
 
     try {
         const conn = await connect()
@@ -68,7 +71,6 @@ export async function deleteCityById(req: Request, res: Response) {
             message: `Grad sa id:${id} je obrisan`
         })
     } catch (error) {
-        res.sendStatus(500)
-        console.log(error?.sqlMessage)
+        res.status(500).send({error: error?.sqlMessage})
     }
 }

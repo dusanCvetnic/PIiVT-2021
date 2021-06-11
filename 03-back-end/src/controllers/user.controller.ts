@@ -14,8 +14,7 @@ export async function getAllUsers(req: Request, res: Response): Promise<Response
 
         return res.json(result[0])
     } catch (error) {
-        res.sendStatus(500)
-        console.log(error?.sqlMessage)
+        res.status(500).send({error: error?.sqlMessage})
     }
 }
 
@@ -31,7 +30,8 @@ async function getUserByEmail(email): Promise<UserModel> {
 }
 
 export async function getUserById(req: Request, res: Response): Promise<Response> {
-    const id = req.params.id
+    const id = +(req.params.id)
+    if (id <= 0) return res.status(400).send('ID ne moze biti manji od 1')
 
     try {
         const conn = await connect()
@@ -51,8 +51,7 @@ export async function getUserById(req: Request, res: Response): Promise<Response
         
         return res.json(user)
     } catch (error) {
-        res.sendStatus(500)
-        console.log(error?.sqlMessage)
+        res.status(500).send({error: error?.sqlMessage})
     }
 }
 
@@ -76,13 +75,13 @@ export async function createUser(req: Request, res: Response) {
         console.log(`Dodat je korisnik ${newUser.forename} ${newUser.surname} sa ulogom ${newUser.role}`)
         res.sendStatus(200)
     } catch (error) {
-        res.sendStatus(500)
-        console.log(error?.sqlMessage)
+        res.status(500).send({error: error?.sqlMessage})
     }
 }
 
 export async function updateUserById(req: Request, res: Response): Promise<Response> {
-    const id = req.params.id
+    const id = +(req.params.id)
+    if (id <= 0) return res.status(400).send('ID ne moze biti manji od 1')
     const updatedUser: UserModel = req.body
     const passwordHash = bcrypt.hashSync(updatedUser.password, 11)
 
@@ -112,13 +111,13 @@ export async function updateUserById(req: Request, res: Response): Promise<Respo
             message: `Korisnik sa id:${id} je azuriran`
         })
     } catch (error) {
-        res.sendStatus(500)
-        console.log(error?.sqlMessage)
+        res.status(500).send({error: error?.sqlMessage})
     }
 }
 
 export async function deleteUserById(req: Request, res: Response) {
-    const id = req.params.id
+    const id = +(req.params.id)
+    if (id <= 0) return res.status(400).send('ID ne moze biti manji od 1')
 
     try {
         const conn = await connect()
@@ -127,8 +126,7 @@ export async function deleteUserById(req: Request, res: Response) {
             message: `Korisnik sa id:${id} je obrisan`
         })
     } catch (error) {
-        res.sendStatus(500)
-        console.log(error?.sqlMessage)
+        res.status(500).send({error: error?.sqlMessage})
     }
 }
 
@@ -152,8 +150,7 @@ export async function loginUser(req: Request, res: Response) {
             }
     
         } catch (error) {
-            res.sendStatus(500)
-            console.log(error?.sqlMessage)
+            res.status(500).send({error: error?.sqlMessage})
         }
     }    
 }
