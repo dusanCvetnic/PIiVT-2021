@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { validationResult } from 'express-validator';
+import { matchedData, validationResult } from 'express-validator';
 
 export function validateRequest(
     req: Request,
@@ -7,8 +7,17 @@ export function validateRequest(
     next: NextFunction
 ) {
     const errors = validationResult(req)
+    const matched = matchedData(req, {
+        includeOptionals: true,
+    })
+
     if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() })
+        return res.status(400).json({ errors: errors.array() })
     }
+
+    if(Object.keys(req.body).length > Object.keys(matched).length){
+        return res.status(400).json({ errors: "Pogresan broj ili nemoguca polja" })
+    }
+
     next()
 }
