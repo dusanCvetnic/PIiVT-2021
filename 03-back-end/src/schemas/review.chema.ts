@@ -5,12 +5,10 @@ const reviewSchema = [
         .exists({checkFalsy: true})
         .isInt({min: 0, max: 5})
         .withMessage('Ocena mora biti ceo broj od 0 do 5'),
-    body('ratedUserId')    
-        .exists({checkFalsy: true})
+    body('ratedUserId')
         .isNumeric()
         .withMessage('Review mora sadrzati informacije ko je ocenjen'),
-    body('userWhoRatedId')    
-        .exists({checkFalsy: true})
+    body('userWhoRatedId')
         .isNumeric()
         .withMessage('Review mora sadrzati informacije ko je ocenio')
 ]
