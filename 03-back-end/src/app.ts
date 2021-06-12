@@ -3,6 +3,7 @@ import * as cors from "cors";
 import cityRoutes from "./routes/city.routes"
 import subjectRoutes from "./routes/subject.routes"
 import userRoutes from "./routes/user.routes"
+import reviewRoutes from "./routes/review.routes"
 export class App {
     private app: express.Application
 
@@ -28,6 +29,7 @@ export class App {
         this.app.use('/cities', cityRoutes)
         this.app.use('/subjects', subjectRoutes)
         this.app.use('/users', userRoutes)
+        this.app.use('/review', reviewRoutes)
     }
 
     afterAll(){
