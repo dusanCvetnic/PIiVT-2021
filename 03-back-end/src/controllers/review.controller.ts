@@ -96,13 +96,11 @@ export async function updateReviewById(id: number, req: Request, res: Response):
             UPDATE 
                 review 
             SET
-                rating = ?,
-                rated__user_id = ?,
-                user_id = ?
+                rating = ?
             WHERE 
-                review_id = ?;`, [updatedReview.rating, updatedReview.ratedUserId, updatedReview.userWhoRatedId, id])
+                review_id = ?;`, [updatedReview.rating, id])
         return res.json({
-            message: `Azurirana je ocena: ${updatedReview.rating}, ocenjen je korisnik sa id: ${updatedReview.ratedUserId}, ocenio je korisnik sa id: ${updatedReview.userWhoRatedId}`
+            message: `Azurirana je ocena: ${updatedReview.rating}, ocenjen je korisnik sa id: ${req.params.ruid}, ocenio je korisnik sa id: ${req.params.uwrid}`
         })
     } catch (error) {
         res.status(500).send({error: error?.sqlMessage})

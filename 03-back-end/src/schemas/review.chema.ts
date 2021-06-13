@@ -7,9 +7,11 @@ const reviewSchema = [
         .withMessage('Ocena mora biti ceo broj od 0 do 5'),
     body('ratedUserId')
         .isNumeric()
+        .optional()
         .withMessage('Review mora sadrzati informacije ko je ocenjen'),
     body('userWhoRatedId')
         .isNumeric()
+        .optional()
         .withMessage('Review mora sadrzati informacije ko je ocenio')
 ]
 

@@ -36,17 +36,26 @@ export async function getUserById(req: Request, res: Response): Promise<Response
     try {
         const conn = await connect()
         const result = await conn.query('SELECT * FROM user WHERE user_id = ?;', [id])
+        const rating = await conn.query(`
+            SELECT
+                AVG(rating) 'averageRating'
+            FROM
+                review
+            WHERE
+                rated__user_id = ?;`, [id])
         
         if(result[0][0] === undefined){
             return res.status(404).send('Trazeni korisnik ne postoji')
         }
-
+        
         const user: UserModel = {
+            userId: result[0][0].user_id,
             forename: result[0][0].forename,
             surname: result[0][0].surname,
             email: result[0][0].email,
             password: result[0][0].password_hash,
             role: result[0][0].role,
+            rating: Number(rating[0][0].averageRating)
         }
         
         return res.json(user)
