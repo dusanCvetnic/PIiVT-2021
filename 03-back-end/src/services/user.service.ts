@@ -213,6 +213,7 @@ class UserService implements CRUD{
 
             let connectCitiesQuery: string = `INSERT INTO user_city(user_id, city_id) VALUES`
             let connectSubjectsQuery: string = `INSERT INTO user_subject(user_id, subject_id) VALUES`
+            
             for(let c of data?.cities){
                 connectCitiesQuery += `(${newUser.userId},${c?.cityId}),`
             }
@@ -224,6 +225,7 @@ class UserService implements CRUD{
             }
             let finalSubjectQuery = connectSubjectsQuery.slice(0, -1)
             finalSubjectQuery += `;`
+            
             await conn.query(finalCityQuery)
             await conn.query(finalSubjectQuery)
             return res.send(this.readByEmail(req, res, data.user.email))
