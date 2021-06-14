@@ -2,17 +2,18 @@ import { Request, Response } from 'express';
 import { connect } from "../common/database";
 import { UserModel } from '../models/user.model';
 import * as bcrypt from "bcrypt";
+import userService from '../services/user.service';
 
 export async function getAllUsers(req: Request, res: Response): Promise<Response> {
     try {
-        const conn = await connect()
-        const result = await conn.query('SELECT * FROM user;')
+        //const conn = await connect()
+        //const result = await conn.query('SELECT * FROM user;')
 
-        if(result[0][0] === undefined){
-            return res.status(404).send('Ne postoje korisnici')
-        }
+        //if(result[0][0] === undefined){
+        //    return res.status(404).send('Ne postoje korisnici')
+        //}
 
-        return res.json(result[0])
+        return res.send(await userService.list(req,res))
     } catch (error) {
         res.status(500).send({error: error?.sqlMessage})
     }
@@ -34,7 +35,7 @@ export async function getUserById(req: Request, res: Response): Promise<Response
     if (id <= 0) return res.status(400).send('ID ne moze biti manji od 1')
 
     try {
-        const conn = await connect()
+        /* const conn = await connect()
         const result = await conn.query('SELECT * FROM user WHERE user_id = ?;', [id])
         const rating = await conn.query(`
             SELECT
@@ -56,19 +57,20 @@ export async function getUserById(req: Request, res: Response): Promise<Response
             password: result[0][0].password_hash,
             role: result[0][0].role,
             rating: Number(rating[0][0].averageRating)
-        }
+        } */
         
-        return res.json(user)
+        return res.send(await userService.readById(req, res, id))
     } catch (error) {
         res.status(500).send({error: error?.sqlMessage})
     }
 }
 
 export async function createUser(req: Request, res: Response) {
-    const newUser: UserModel = req.body
-    const passwordHash = bcrypt.hashSync(newUser.password, 11)
+    //const newUser: UserModel = req.body
+    //const passwordHash = bcrypt.hashSync(newUser.password, 11)
     try {
-        const conn = await connect()
+        return res.send(await userService.create(req, res))
+        /* const conn = await connect()
         await conn.query(`
             INSERT 
                 user 
@@ -82,7 +84,7 @@ export async function createUser(req: Request, res: Response) {
         const user: UserModel = await getUserByEmail(newUser.email)
         console.log(user)
         console.log(`Dodat je korisnik ${newUser.forename} ${newUser.surname} sa ulogom ${newUser.role}`)
-        res.sendStatus(200)
+        res.sendStatus(200) */
     } catch (error) {
         res.status(500).send({error: error?.sqlMessage})
     }
@@ -91,11 +93,11 @@ export async function createUser(req: Request, res: Response) {
 export async function updateUserById(req: Request, res: Response): Promise<Response> {
     const id = +(req.params.id)
     if (id <= 0) return res.status(400).send('ID ne moze biti manji od 1')
-    const updatedUser: UserModel = req.body
-    const passwordHash = bcrypt.hashSync(updatedUser.password, 11)
+    //const updatedUser: UserModel = req.body
+    //const passwordHash = bcrypt.hashSync(updatedUser.password, 11)
 
     try {
-        const conn = await connect()
+        /* const conn = await connect()
         await conn.query(
             `UPDATE 
                 user 
@@ -118,7 +120,8 @@ export async function updateUserById(req: Request, res: Response): Promise<Respo
             ])
         return res.json({
             message: `Korisnik sa id:${id} je azuriran`
-        })
+        }) */
+        return res.send(await userService.updateById(req, res, id))
     } catch (error) {
         res.status(500).send({error: error?.sqlMessage})
     }
@@ -129,11 +132,20 @@ export async function deleteUserById(req: Request, res: Response) {
     if (id <= 0) return res.status(400).send('ID ne moze biti manji od 1')
 
     try {
-        const conn = await connect()
-        await conn.query('DELETE FROM user WHERE user_id = ?;', [id])
-        return res.json({
-            message: `Korisnik sa id:${id} je obrisan`
-        })
+        //const conn = await connect()
+        //await conn.query('DELETE FROM user WHERE user_id = ?;', [id])
+        //return res.json({
+        //    message: `Korisnik sa id:${id} je obrisan`
+        //})
+        return res.send(await userService.deleteById(req, res, id))
+    } catch (error) {
+        res.status(500).send({error: error?.sqlMessage})
+    }
+}
+
+export async function registerUser(req: Request, res: Response) {
+    try {
+        return await userService.register(req, res)
     } catch (error) {
         res.status(500).send({error: error?.sqlMessage})
     }
