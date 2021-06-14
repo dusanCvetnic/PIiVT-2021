@@ -8,7 +8,6 @@ const router = Router()
 router.route('/')
     .get(getAllUsers)
     .post(userSchema, validateRequest, createUser)
-
 router.route('/:id')
     .get(getUserById)
     .put(userSchema, validateRequest, updateUserById)
