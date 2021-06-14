@@ -50,8 +50,14 @@ export async function getReviewByRatedUserIdAndUserWhoRatedId(req: Request, res:
 export async function createReview(req: Request, res: Response) {
     const ratedUserId = +(req.params.ruid)
     const userWhoRatedId = +(req.params.uwrid)
+    const rate = +(req.params.rate)
+
+    if(rate < 1 || rate > 5){
+        return res.status(400).send('Nemoguca ocena')
+    }
+    
     if (ratedUserId <= 0 || userWhoRatedId <= 0) return res.status(400).send('ID ne moze biti manji od 1')
-    const newReview: ReviewModel = req.body
+    //const newReview: ReviewModel = req.body
     try {
         const conn = await connect()
         await conn.query(`
@@ -60,11 +66,11 @@ export async function createReview(req: Request, res: Response) {
             SET
                 rating = ?,
                 rated__user_id = ?,
-                user_id = ?;`, [newReview.rating, ratedUserId, userWhoRatedId])
+                user_id = ?;`, [rate, ratedUserId, userWhoRatedId])
 
         res.sendStatus(200)
 
-        console.log(`Dodata je ocena: ${newReview.rating}, ocenjen je korisnik sa id: ${ratedUserId}, ocenio je korisnik sa id: ${userWhoRatedId}`)
+        console.log(`Dodata je ocena: ${rate}, ocenjen je korisnik sa id: ${ratedUserId}, ocenio je korisnik sa id: ${userWhoRatedId}`)
     } catch (error) {
         if(error?.sqlMessage.includes("uq_review_rated__user_id_user_id")){
             res.status(400).send({message: "Ovaj korisik je vec ocenjen od strane datog studenta"})
@@ -76,9 +82,16 @@ export async function createReview(req: Request, res: Response) {
 
 export async function updateReviewByRatedUserIdAndUserWhoRatedId(req: Request, res: Response): Promise<Response> {
     try {
+        console.log("1")
         const rId = (await getReviewByRatedUserIdAndUserWhoRatedId(req, res))?.reviewId
+        if(rId){
+            console.log("2")
+            return await updateReviewById(rId, req, res)
+        }else{
+            console.log("3")
+            return await createReview(req, res)
+        }
         
-        return await updateReviewById(rId, req, res)
     } catch (error) {
         res.status(500).send({error: error?.sqlMessage})
     }
@@ -87,8 +100,12 @@ export async function updateReviewByRatedUserIdAndUserWhoRatedId(req: Request, r
 export async function updateReviewById(id: number, req: Request, res: Response): Promise<Response> {
     //const id = +(req.params.id)
     if (id <= 0) return res.status(400).send('ID ne moze biti manji od 1')
+    const rate = +(req.params.rate)
 
-    const updatedReview: ReviewModel = req.body
+    if(rate < 1 || rate > 5){
+        return res.status(400).send('Nemoguca ocena')
+    }
+    //const updatedReview: ReviewModel = req.body
 
     try {
         const conn = await connect()
@@ -98,9 +115,9 @@ export async function updateReviewById(id: number, req: Request, res: Response):
             SET
                 rating = ?
             WHERE 
-                review_id = ?;`, [updatedReview.rating, id])
+                review_id = ?;`, [+(req.params.rate), id])
         return res.json({
-            message: `Azurirana je ocena: ${updatedReview.rating}, ocenjen je korisnik sa id: ${req.params.ruid}, ocenio je korisnik sa id: ${req.params.uwrid}`
+            message: `Azurirana je ocena: ${req.params.rate}, ocenjen je korisnik sa id: ${req.params.ruid}, ocenio je korisnik sa id: ${req.params.uwrid}`
         })
     } catch (error) {
         res.status(500).send({error: error?.sqlMessage})

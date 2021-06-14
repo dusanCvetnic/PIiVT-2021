@@ -13,8 +13,11 @@ router.route('/:ruid/rated/:uwrid')
 
 router.route('/rating/:uwrid/rated/:ruid')
     .post(reviewSchema, validateRequest, createReview)
-router.route('/update/:uwrid/rated/:ruid')
-    .put(reviewSchema, validateRequest, updateReviewByRatedUserIdAndUserWhoRatedId)
+
+// OVU RUTU TREBA KORISTITI ZA KREIRANJE ILI UPDATE OCENA!!!
+router.route('/create/:uwrid/rated/:ruid/with/:rate')
+    .post(updateReviewByRatedUserIdAndUserWhoRatedId)
+
 router.route('/:id')
     .get(getReviewById)
     .put(reviewSchema, validateRequest, updateReviewById)

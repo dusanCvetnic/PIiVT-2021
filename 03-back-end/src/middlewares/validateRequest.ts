@@ -10,12 +10,14 @@ export function validateRequest(
     const matched = matchedData(req, {
         includeOptionals: true
     })
-
+    console.log(`${Object.keys(matched).length}, ${Object.keys(req.body).length}`)
+    
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
     }
 
     if(Object.keys(req.body).length > Object.keys(matched).length){
+        console.log("usao")
         return res.status(400).json({ errors: "Pogresan broj ili nemoguca polja" })
     }
 
