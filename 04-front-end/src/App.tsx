@@ -1,25 +1,25 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Link, Route } from 'react-router-dom';
+import LoginScreen from './screens/LoginScreen';
+import HomeScreen from './screens/HomeScreen';
+import RegisterScreen from './screens/RegisterScreen';
+import {Navbar, Nav, NavDropdown} from 'react-bootstrap'
+import OfferScreen from './screens/OfferScreen';
+import ProfileScreen from './screens/ProfileScreen';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <main>
+        <Route path="/register" component={RegisterScreen}></Route>
+        <Route path="/" component={LoginScreen} exact></Route>
+        <Route path="/offer" component={OfferScreen} exact></Route>
+        <Route path="/profile" component={ProfileScreen} exact></Route>
+          
+      </main>
+    </BrowserRouter>
   );
 }
 
