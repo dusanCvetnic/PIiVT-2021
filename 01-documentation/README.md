@@ -85,30 +85,30 @@ Na sledecoj slici je prikazan model baze podataka:
 
 ![alt text](../02-resources/database-model.png)
 
-Tabela user:
+## Tabela user:
 
 ![alt text](../02-resources/table-user.png)
 
-Tabela offer:
+## Tabela offer:
 
 ![alt text](../02-resources/table-offer.png)
 
-Tabela review:
+## Tabela review:
 
 ![alt text](../02-resources/table-review.png)
 
-Tabela city:
+## Tabela city:
 
 ![alt text](../02-resources/table-city.png)
 
-Tabela subject:
+## Tabela subject:
 
 ![alt text](../02-resources/table-subject.png)
 
-Tabela user_subject:
+## Tabela user_subject:
 
 ![alt text](../02-resources/table-user-subject.png)
 
-Tabela user_city:
+## Tabela user_city:
 
 ![alt text](../02-resources/table-user-city.png)
