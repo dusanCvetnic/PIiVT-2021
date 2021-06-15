@@ -96,6 +96,4 @@ export async function userLogin(req: Request, res: Response){
     } catch (error) {
         res.status(500).send({error: error?.sqlMessage})
     }
-    
-
 }
