@@ -7,7 +7,7 @@ export async function getAllCities(req: Request, res: Response)/* : Promise<Resp
     try {
         //const conn = await connect()
         //const result = await conn.query('SELECT * FROM city;')
-        return res.send(await cityService.list(req, res))
+        return res.send(await cityService.list(req, res)) 
     } catch (error) {
         res.status(500).send({error: error?.sqlMessage})
     }
