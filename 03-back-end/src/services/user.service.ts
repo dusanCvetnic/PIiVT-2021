@@ -211,24 +211,28 @@ class UserService implements CRUD{
 
             const newUser: UserModel = await this.readByEmail(req, res, data.user.email)
 
-            let connectCitiesQuery: string = `INSERT INTO user_city(user_id, city_id) VALUES`
-            let connectSubjectsQuery: string = `INSERT INTO user_subject(user_id, subject_id) VALUES`
-            
-            for(let c of data?.cities){
-                connectCitiesQuery += `(${newUser.userId},${c?.cityId}),`
+            if(newUser.role === 'professor'){
+                let connectCitiesQuery: string = `INSERT INTO user_city(user_id, city_id) VALUES`
+                let connectSubjectsQuery: string = `INSERT INTO user_subject(user_id, subject_id) VALUES`
+                
+                for(let c of data?.cities){
+                    connectCitiesQuery += `(${newUser.userId},${c?.cityId}),`
+                }
+                let finalCityQuery = connectCitiesQuery.slice(0, -1)
+                finalCityQuery += `;`
+        
+                for(let s of data?.subjects){
+                    connectSubjectsQuery += `(${newUser.userId},${s?.subjectId}),`
+                }
+                let finalSubjectQuery = connectSubjectsQuery.slice(0, -1)
+                finalSubjectQuery += `;`
+                
+                await conn.query(finalCityQuery)
+                await conn.query(finalSubjectQuery)
             }
-            let finalCityQuery = connectCitiesQuery.slice(0, -1)
-            finalCityQuery += `;`
-    
-            for(let s of data?.subjects){
-                connectSubjectsQuery += `(${newUser.userId},${s?.subjectId}),`
-            }
-            let finalSubjectQuery = connectSubjectsQuery.slice(0, -1)
-            finalSubjectQuery += `;`
+
             
-            await conn.query(finalCityQuery)
-            await conn.query(finalSubjectQuery)
-            return res.send(this.readByEmail(req, res, data.user.email))
+            return res.send(await this.readByEmail(req, res, data.user.email))
         } catch (error) {
             res.status(500).send({error: error?.sqlMessage})
         }
