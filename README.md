@@ -1,5 +1,6 @@
 # Projekat iz predmeta Praktikum - Internet i veb tehnologije - 2020/2021.
-
+## Veb aplikacija za ponudu-potražnju privatnih časova
+## Dušan Cvetnić 2017202297
 ## Sadrzaj
 
 ...
