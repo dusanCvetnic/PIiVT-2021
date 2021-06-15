@@ -8,7 +8,7 @@ const router = Router()
 router.route('/')
     .get(getAllReviews)
 
-router.route('/:ruid/rated/:uwrid')
+router.route('/:uwrid/rated/:ruid')
     .get(getReviewByRatedUserIdAndUserWhoRatedId)
 
 router.route('/rating/:uwrid/rated/:ruid')

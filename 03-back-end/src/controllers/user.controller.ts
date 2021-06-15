@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { UserModel } from '../models/user.model';
-import * as bcrypt from "bcrypt";
 import userService from '../services/user.service';
 
 export async function getAllUsers(req: Request, res: Response): Promise<Response> {
@@ -46,7 +45,11 @@ export async function deleteUserById(req: Request, res: Response) {
     if (id <= 0) return res.status(400).send('ID ne moze biti manji od 1')
 
     try {
-        return res.send(await userService.deleteById(req, res, id))
+        if(!(await userService.readById(req, res, id))){
+            return res.status(404)
+        }else{
+            return res.send(await userService.deleteById(req, res, id))
+        }
     } catch (error) {
         res.status(500).send({error: error?.sqlMessage})
     }

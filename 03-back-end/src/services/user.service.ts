@@ -149,6 +149,7 @@ class UserService implements CRUD{
             await conn.query(`DELETE FROM user_city WHERE user_id = ?`, [resourceId])
             await conn.query(`DELETE FROM user_subject WHERE user_id = ?`, [resourceId])
             await conn.query(`DELETE FROM review WHERE user_id = ? OR rated__user_id = ?`, [resourceId, resourceId])
+            await conn.query(`DELETE FROM offer WHERE user_id = ?`, [resourceId])
             await conn.query(`DELETE FROM user WHERE user_id = ?;`, [resourceId])
             return `Korisnik sa id:${resourceId} je obrisan`
         } catch (error) {
@@ -190,9 +191,7 @@ class UserService implements CRUD{
     async login(req: Request, res: Response, resource: string){
 
     }
-    //VALUES
-	//('AI for Marketing','2019-08-01','2019-12-31'),
-	//('AI for Marketing','2019-08-01','2019-12-31'),...
+    
     async register(req: Request, res: Response){
         const data = req.body
         const passwordHash = bcrypt.hashSync(data.user.password, 11)
@@ -234,7 +233,11 @@ class UserService implements CRUD{
             
             return res.send(await this.readByEmail(req, res, data.user.email))
         } catch (error) {
-            res.status(500).send({error: error?.sqlMessage})
+            if(error?.sqlMessage.includes('uq_user_email')){
+                res.status(400).send('Vec postoji dati korisnik')
+            }else{
+                res.status(500).send({error: error?.sqlMessage})
+            }
         }
     }
 }

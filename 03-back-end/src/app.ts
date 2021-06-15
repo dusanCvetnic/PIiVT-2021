@@ -5,6 +5,7 @@ import subjectRoutes from "./routes/subject.routes"
 import userRoutes from "./routes/user.routes"
 import reviewRoutes from "./routes/review.routes"
 import authRoutes from "./routes/auth.routes"
+import offerRoutes from "./routes/offer.routes"
 export class App {
     private app: express.Application
 
@@ -32,6 +33,7 @@ export class App {
         this.app.use('/users', userRoutes)
         this.app.use('/review', reviewRoutes)
         this.app.use('/auth', authRoutes)
+        this.app.use('/offer', offerRoutes)
     }
 
     afterAll(){

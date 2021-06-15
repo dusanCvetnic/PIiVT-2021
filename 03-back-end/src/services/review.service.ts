@@ -121,10 +121,10 @@ class ReviewService implements CRUD{
         }
     }
 
-    async getReviewByBothUserId(req: Request, res: Response): Promise<ReviewModel> {
+    async getReviewByBothUserId(req: Request, res: Response): Promise<any> {
         const ruid = +(req.params.ruid)
         const uwrid = +(req.params.uwrid)
-        if (ruid <= 0 || uwrid <= 0) return null
+        if (ruid <= 0 || uwrid <= 0) return res.status(400).send('Id-jevi ne mogu biti negativni')
         try {
         
             const conn = await connect()
@@ -139,11 +139,10 @@ class ReviewService implements CRUD{
                 user_id = ?;`, [ruid, uwrid])
             
             const review: ReviewModel = {
-                reviewId: result[0][0]?.review_id,
-                rating: result[0][0]?.rating
+                reviewId: result[0][0].review_id,
+                rating: result[0][0].rating
             }
-            
-            return review
+            return res.send(review)
         } catch (error) {
             res.status(500).send({error: error?.sqlMessage})
         }
